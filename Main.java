@@ -1,10 +1,13 @@
 import java.util.Scanner;
 
 public class Main {
-    // Lê uma casa e já devolve em minúsculas e sem espaços ("E4 " vira "e4")
+    // Lê uma casa e já devolve em minúsculas e sem espaços ("E 4 " vira "e4")
     public static String lerCasa(Scanner sc, String mensagem) {
         System.out.print(mensagem);
-        return sc.nextLine().trim().toLowerCase();
+        if (!sc.hasNextLine()) {
+            return "";
+        }
+        return sc.nextLine().replace(" ", "").toLowerCase();
     }
 
     public static void main(String[] args) {
@@ -27,6 +30,9 @@ public class Main {
             System.out.println("5 - Remover todos os obstaculos");
             System.out.println("0 - Sair");
             System.out.print("Escolha: ");
+            if (!sc.hasNextLine()) {
+                break;
+            }
             opcao = sc.nextLine().trim();
 
             switch (opcao) {
@@ -68,6 +74,8 @@ public class Main {
                 case "4":
                     if (origem == null || destino == null) {
                         System.out.println("Defina a casa do cavalo e a do alvo primeiro.");
+                    } else if (origem.equals(destino)) {
+                        System.out.println("O cavalo ja esta no alvo (0 movimentos).");
                     } else {
                         int movimentos = tabuleiro.menorNMovimentos(origem, destino);
                         if (movimentos == -1) {
