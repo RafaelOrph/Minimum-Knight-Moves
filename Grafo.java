@@ -32,20 +32,24 @@ public class Grafo<T> {
         this.arestas.add(aresta);
     }
 
+    //Tira as arestas de entrada e saida de um vertice para casas bloqueadas
     public void isolarVertice(T dado){
         Vertice<T> vertice = this.getVertice(dado);
         
         if(vertice == null) return ;
 
+        //retira a aresta para cada movimento que sai da casa bloqueada
         for(Aresta<T> aresta : vertice.getArestasSaida()){
             aresta.getFim().getArestasEntrada().remove(aresta);
             this.arestas.remove(aresta);
         }
+        //retira a aresta para cada movimento que entra na casa bloqueada
         for(Aresta<T> aresta : vertice.getArestasEntrada()){
             aresta.getInicio().getArestasSaida().remove(aresta);
             this.arestas.remove(aresta);
 
         }
+        //esvazia a lista das proprias casas
         vertice.getArestasSaida().clear();
         vertice.getArestasEntrada().clear();    
     }
@@ -63,19 +67,22 @@ public class Grafo<T> {
         ArrayList<Vertice<T>> fila = new ArrayList<Vertice<T>>();
         ArrayList<Integer> distancias = new ArrayList<Integer>();
 
+        // começa a busca pela casa do cavalo, a distancia dela até ela mesma é 0
         marcados.add(inicio);
         fila.add(inicio);
         distancias.add(0);
 
         while(fila.size() > 0){
+            // pega a primeira casa da fila e sua distancia
             Vertice<T> visitado = fila.get(0);
             int distanciaVisitado = distancias.get(0);
 
             if(visitado == alvo){
                 return distanciaVisitado;
             }
-
+            // olha cada movimento que sai da casa visitada
             for(int i = 0; i < visitado.getArestasSaida().size(); i++){
+                // casa onde o cavalo pousaria com esse movimento
                 Vertice<T> proximo = visitado.getArestasSaida().get(i).getFim();
                 if(!marcados.contains(proximo)){
                     marcados.add(proximo);
@@ -83,6 +90,7 @@ public class Grafo<T> {
                     distancias.add(distanciaVisitado + 1);
                 }
             }
+            //sai da fila junto com a distancia
             fila.remove(0);
             distancias.remove(0);
         }
